@@ -1,0 +1,17 @@
+image:
+  repositoryBackend: "mybackend"
+  tagBackend: "local"
+  repositoryFrontend: "myfrontend"
+  tagFrontend: "local"
+replicaCount: 1
+service:
+  type: ClusterIP
+  port: 80
+backend:
+  port: 80
+frontend:
+  port: 80
+test:
+  enabled: false
+  command: ["curl"]
+  args: ["localhost:80"]

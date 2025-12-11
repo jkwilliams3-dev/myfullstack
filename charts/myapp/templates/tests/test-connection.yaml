@@ -1,0 +1,13 @@
+{{- if .Values.test.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-connection
+spec:
+  containers:
+    - name: test
+      image: busybox
+      command: {{ .Values.test.command }}
+      args: {{ .Values.test.args }}
+  restartPolicy: Never
+{{- end }}

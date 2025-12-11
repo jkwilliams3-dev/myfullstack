@@ -1,0 +1,23 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /app
+
+# Copy solution and project files
+COPY *.sln ./
+COPY backend/*.csproj ./backend/
+
+# Restore dependencies
+RUN dotnet restore ./backend/backend.csproj
+
+# Copy all source files
+COPY backend/. ./backend/
+WORKDIR /app/backend
+RUN dotnet publish -c Release -o out
+
+# Runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/backend/out ./
+ENV ASPNETCORE_URLS=http://+:80
+EXPOSE 80
+ENTRYPOINT ["dotnet", "backend.dll"]

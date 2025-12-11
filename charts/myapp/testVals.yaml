@@ -1,0 +1,83 @@
+# Docker images
+image:
+  repositoryBackend: "<ACR_NAME>.azurecr.io/mybackend"
+  tagBackend: "mybackend:local"
+  repositoryFrontend: "<ACR_NAME>.azurecr.io/myfrontend"
+  tagFrontend: "myfrontend:local"
+
+# Number of pod replicas
+replicaCount: 1
+
+# Kubernetes Service configuration
+service:
+  type: ClusterIP
+  port: 80
+
+# Backend container settings
+backend:
+  port: 80
+
+# Frontend container settings
+frontend:
+  port: 80
+
+# ServiceAccount configuration
+serviceAccount:
+  create: true   # Helm will create a ServiceAccount
+  name: ""       # Helm generates a default name if left empty
+
+# Ingress configuration
+ingress:
+  enabled: false          # Disable by default; set true if you have ingress controller
+  annotations: {}         # Optional annotations for ingress
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []                 # TLS configuration
+
+# Resource requests/limits (optional)
+resources:
+  limits: {}
+  requests: {}
+
+# Node scheduling (optional)
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+httpRoute:
+  # HTTPRoute enabled.
+  enabled: false
+  # HTTPRoute annotations.
+  annotations: {}
+  # Which Gateways this Route is attached to.
+  parentRefs:
+  - name: gateway
+    sectionName: http
+    # namespace: default
+  # Hostnames matching HTTP header.
+  hostnames:
+  - chart-example.local
+  # List of rules and filters applied.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2

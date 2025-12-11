@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "myapp.fullname" . }}-frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "myapp.name" . }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ include "myapp.name" . }}-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.image.repositoryFrontend }}:{{ .Values.image.tagFrontend }}"
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "{{ .Values.environment | default "Production" }}"

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "myapp.fullname" . }}-backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "myapp.name" . }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ include "myapp.name" . }}-backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.image.repositoryBackend }}:{{ .Values.image.tagBackend }}"
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "{{ .Values.environment | default "Production" }}"
